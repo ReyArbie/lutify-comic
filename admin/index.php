@@ -1,5 +1,12 @@
 <?php
 include 'config/config.php';
+session_start();
+if (!isset($_SESSION['login'])) {
+    // Kalau belum login, kembalikan ke login.php
+    header('Location: login.php');
+    exit;
+}
+
 // Hitung total komik dari tabel comics
 $total_komik = 0;
 $result = $conn->query("SELECT COUNT(*) as total FROM comics");
