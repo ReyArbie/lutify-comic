@@ -1,0 +1,167 @@
+/* kelola-comic.css */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #333;
+  color: #f4f6f8;
+}
+
+header {
+  background: #202938;
+  color: #f57;
+  padding: 30px 20px;
+  text-align: center;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2em;
+}
+
+header p {
+  margin: 5px 0 0;
+  font-size: 1.1em;
+  opacity: 0.9;
+}
+
+nav {
+  background-color: #3d506f;
+  padding: 15px 20px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 25px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+
+nav a {
+  color: #f57;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+nav a:hover {
+  background-color: #000;
+  color: #f57;
+}
+
+.container {
+  background-color: #f4f6f8;
+  color: #333;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.container h2 {
+  color: #202938;
+  border-left: 6px solid #f57;
+  padding-left: 12px;
+  font-size: 1.8em;
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th,
+td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #3d506f;
+  color: #f4f6f8;
+}
+
+tr:nth-child(even) {
+  background-color: #e9ecef;
+}
+
+tr:hover {
+  background-color: #d6dce5;
+}
+
+button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-right: 5px;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+/* bagian edit */
+button:nth-child(1) {
+  background-color: #ffc107;
+  color: #000;
+}
+
+/* bagian hapus */
+button:nth-child(2) {
+  background-color: #dc3545;
+  color: #fff;
+}
+.form-episode {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #202938;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select,
+.form-group input[type="file"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1em;
+  background-color: #fff;
+  color: #333;
+}
+
+.btn-upload {
+  background-color: #dc3545;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1em;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
