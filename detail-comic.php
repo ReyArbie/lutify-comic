@@ -314,7 +314,7 @@
     <section class="welcome-section">
       <h2>Welcome to LUTIFY comic</h2>
       <p>
-        Temukan anime favoritmu dan jelajahi dunia fantasi yang menakjubkan.
+        Temukan komik favoritmu dan jelajahi dunia fantasi yang menakjubkan.
       </p>
     </section>
 
