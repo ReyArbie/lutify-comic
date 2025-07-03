@@ -11,19 +11,24 @@
 - 🗂️ Navigasi berdasarkan genre dan abjad A-Z
 - ⚙️ Struktur backend dengan koneksi database MySQL
 
+```markdown
 ## Struktur Proyek
 
-├── index.php
-├── detail-comic.php
-├── genre.php
-├── lista-z.php
-├── genre.js
-├── lista-z.js
-├── koneksi.php
-├── admin/
-├── images/
-├── styles/
-└── README.md
+- **File utama:**
+  - index.php
+  - detail-comic.php
+  - genre.php
+  - lista-z.php
+  - genre.js
+  - lista-z.js
+  - koneksi.php
+  - README.md
+
+- **Direktori:**
+  - admin/ - Berisi file-file panel admin
+  - images/ - Berisi gambar-gambar komik
+  - styles/ - Berisi file CSS
+
 
 ## Instalasi
 
