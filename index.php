@@ -104,7 +104,7 @@
   </main>
 
   <footer>
-    <p>&copy; 2025 LUTIFY comic. All Rights Reserved.</p>
+    <p>&copy; 2024-2025 LUTIFY comic. All Rights Reserved.</p>
   </footer>
 
   <script src="script.js"></script>
