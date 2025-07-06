@@ -52,7 +52,7 @@ if (isset($_POST['edit_id'])) {
 </nav>
 
     <div class="container">
-      <h2>Daftar Komik</h2>
+      <h2>Daftar comic</h2>
       <table>
         <thead>
           <tr>

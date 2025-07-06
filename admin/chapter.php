@@ -86,7 +86,7 @@ if ($result) {
 
 
 <div class="container">
-    <h2>Daftar Episode</h2>
+    <h2>Daftar Chapter</h2>
     <table>
         <thead>
             <tr>

@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit">Login</button>
       </form>
       <footer>
-        <p>© 2025 LUTIFY COMIC. All rights reserved.</p>
+        <p>© <?= date('Y') ?> LUTIFY COMIC. All rights reserved.</p>
       </footer>
     </div>
   </body>
