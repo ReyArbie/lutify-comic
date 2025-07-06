@@ -37,7 +37,7 @@ if (isset($_POST['edit_id'])) {
   </head>
   <body>
     <header>
-      <h1>Kelola Komik</h1>
+      <h1>Kelola comic</h1>
       <p>Daftar semua komik di LUTIFY COMIC</p>
     </header>
 
