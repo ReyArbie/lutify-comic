@@ -45,7 +45,7 @@ if (isset($_POST['edit_id'])) {
   <div class="nav-center">
     <a href="index.php">Dashboard</a>
     <a href="kelola-comic.php">Kelola Comic</a>
-    <a href="episode.php">Kelola Episode</a>
+    <a href="chapter.php">Kelola Chapter</a>
     <a href="upload.php">Upload Comic</a>
   </div>
   <a href="logout.php" class="logout-btn">Logout</a>

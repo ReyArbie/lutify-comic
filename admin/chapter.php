@@ -70,15 +70,15 @@ if ($result) {
 </head>
 <body>
 <header>
-    <h1>Kelola Episode</h1>
-    <p>Daftar episode untuk setiap komik dan tambah episode baru</p>
+    <h1>Kelola Chapter</h1>
+    <p>Daftar Chapter untuk setiap comic dan tambah Chapter baru</p>
 </header>
 
 <nav>
   <div class="nav-center">
     <a href="index.php">Dashboard</a>
     <a href="kelola-comic.php">Kelola Comic</a>
-    <a href="episode.php">Kelola Episode</a>
+    <a href="chapter.php">Kelola Chapter</a>
     <a href="upload.php">Upload Comic</a>
   </div>
   <a href="logout.php" class="logout-btn">Logout</a>
@@ -90,8 +90,8 @@ if ($result) {
     <table>
         <thead>
             <tr>
-                <th>Judul Komik</th>
-                <th>Nomor Episode</th>
+                <th>Judul Comic</th>
+                <th>Nomor Chapter</th>
                 <th>Halaman</th>
             </tr>
         </thead>
@@ -121,7 +121,7 @@ if ($result) {
     </table>
 
     <hr />
-    <h2>Tambah Episode Baru</h2>
+    <h2>Tambah Chapter Baru</h2>
     <form class="form-episode" action="episode.php" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label for="komik">Pilih Komik:</label>
