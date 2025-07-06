@@ -5,7 +5,7 @@ include 'config/config.php';
 if (isset($_POST['delete_id'])) {
   $id = intval($_POST['delete_id']);
 
-  // Hapus genre terkait jika pakai tabel terpisah (comic_genre)
+  // Hapus genre terkait jika pakai tabel terpisah (genre)
   $conn->query("DELETE FROM genre WHERE id_comic=$id");
 
   // Hapus komik
