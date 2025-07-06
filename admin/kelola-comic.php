@@ -1,23 +1,31 @@
 <?php
 include 'config/config.php';
 
+// Hapus Komik
 if (isset($_POST['delete_id'])) {
   $id = intval($_POST['delete_id']);
-  $conn->query("DELETE FROM comics WHERE id=$id");
+
+  // Hapus genre terkait jika pakai tabel terpisah (comic_genre)
+  $conn->query("DELETE FROM genre WHERE id_comic=$id");
+
+  // Hapus komik
+  $conn->query("DELETE FROM comic WHERE id_comic=$id");
   echo 'deleted';
   exit;
 }
 
-
+// Edit Komik
 if (isset($_POST['edit_id'])) {
   $id = intval($_POST['edit_id']);
   $judul = $conn->real_escape_string($_POST['edit_judul']);
   $deskripsi = $conn->real_escape_string($_POST['edit_deskripsi']);
-  $conn->query("UPDATE comics SET judul='$judul', deskripsi='$deskripsi' WHERE id=$id");
+  $conn->query("UPDATE comic SET title_comic='$judul', summary_comic='$deskripsi' WHERE id_comic=$id");
   echo 'updated';
   exit;
 }
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="id">
@@ -55,13 +63,13 @@ if (isset($_POST['edit_id'])) {
         </thead>
         <tbody>
           <?php
-          $result = $conn->query("SELECT * FROM comics ORDER BY id DESC");
+          $result = $conn->query("SELECT * FROM comic ORDER BY id_comic DESC");
           if ($result && $result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
               ?>
-              <tr data-id="<?php echo $row['id']; ?>">
-                <td class="comicTitle"><?php echo htmlspecialchars($row['judul']); ?></td>
-                <td class="comicDesc"><?php echo htmlspecialchars($row['deskripsi']); ?></td>
+              <tr data-id="<?php echo $row['id_comic']; ?>">
+                <td class="comicTitle"><?php echo htmlspecialchars($row['title_comic']); ?></td>
+                <td class="comicDesc"><?php echo htmlspecialchars($row['summary_comic']); ?></td>
                 <td>
                   <button class="editBtn">Edit</button>
                   <button class="deleteBtn">Hapus</button>

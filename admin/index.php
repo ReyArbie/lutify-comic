@@ -3,7 +3,7 @@ include 'config/config.php';
 
 // Hitung total komik dari tabel comics
 $total_komik = 0;
-$result = $conn->query("SELECT COUNT(*) as total FROM comics");
+$result = $conn->query("SELECT COUNT(*) as total FROM comic");
 if ($result && $row = $result->fetch_assoc()) {
   $total_komik = $row['total'];
 }

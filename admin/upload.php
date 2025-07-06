@@ -6,12 +6,29 @@ $modalType = 'success';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $judul = $_POST['judul'] ?? '';
-    $genre = isset($_POST['genre']) ? implode(',', $_POST['genre']) : '';
     $deskripsi = $_POST['deskripsi'] ?? '';
     $cover = $_FILES['cover'];
 
-    if ($judul && $genre && $deskripsi && $cover['name']) {
-        $cek = $conn->prepare("SELECT COUNT(*) FROM comics WHERE judul = ?");
+    // Daftar genre yang ada pada tabel genre
+    $all_genres = ['action', 'comedy', 'romance', 'horror', 'adventure'];
+    $genre_values = array_fill_keys($all_genres, 0);
+
+    // Isi 1 jika user centang
+    if (isset($_POST['genre'])) {
+        foreach ($_POST['genre'] as $g) {
+            if (isset($genre_values[$g])) {
+                $genre_values[$g] = 1;
+            }
+        }
+    }
+
+    if ($judul && $deskripsi && $cover['tmp_name']) {
+        // Baca file gambar dan encode ke base64
+        $imageData = file_get_contents($cover['tmp_name']);
+        $base64Cover = base64_encode($imageData);
+
+        // Cek apakah judul sudah ada di tabel comic
+        $cek = $conn->prepare("SELECT COUNT(*) FROM comic WHERE title_comic = ?");
         $cek->bind_param("s", $judul);
         $cek->execute();
         $cek->bind_result($ada);
@@ -23,31 +40,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $modalMessage = 'Judul komik sudah ada, silakan pakai judul lain!';
             $modalType = 'error';
         } else {
-            $uploadDir = "uploads/";
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
-            }
-            $coverName = time() . '_' . basename($cover['name']);
-            $uploadFile = $uploadDir . $coverName;
+            // 1. Insert data komik ke tabel comic
+            $stmt = $conn->prepare("INSERT INTO comic (title_comic, summary_comic, cover_comic) VALUES (?, ?, ?)");
+            $stmt->bind_param("sss", $judul, $deskripsi, $base64Cover);
 
-            if (move_uploaded_file($cover['tmp_name'], $uploadFile)) {
-                $stmt = $conn->prepare("INSERT INTO comics (judul, genre, deskripsi, cover) VALUES (?, ?, ?, ?)");
-                $stmt->bind_param("ssss", $judul, $genre, $deskripsi, $coverName);
+            if ($stmt->execute()) {
+                // 2. Ambil id_comic terakhir
+                $last_id = $conn->insert_id;
 
-                if ($stmt->execute()) {
+                // 3. Insert genre ke tabel genre
+                $query = "INSERT INTO genre (id_comic, action, comedy, romance, horror, adventure) VALUES (?, ?, ?, ?, ?, ?)";
+                $stmt2 = $conn->prepare($query);
+                $stmt2->bind_param(
+                    "iiiiii", $last_id,
+                    $genre_values['action'],
+                    $genre_values['comedy'],
+                    $genre_values['romance'],
+                    $genre_values['horror'],
+                    $genre_values['adventure']
+                );
+                if ($stmt2->execute()) {
                     $showModal = true;
                     $modalMessage = 'Komik berhasil di-upload!';
                     $modalType = 'success';
                 } else {
                     $showModal = true;
-                    $modalMessage = 'Gagal upload ke database!';
+                    $modalMessage = 'Gagal simpan genre!';
                     $modalType = 'error';
                 }
+                $stmt2->close();
             } else {
                 $showModal = true;
-                $modalMessage = 'Upload cover gagal!';
+                $modalMessage = 'Gagal upload ke database!';
                 $modalType = 'error';
             }
+            $stmt->close();
         }
     } else {
         $showModal = true;
@@ -56,6 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
   <head>

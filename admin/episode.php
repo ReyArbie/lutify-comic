@@ -1,9 +1,9 @@
 <?php
 include 'config/config.php';
 
-// Ambil daftar komik dari tabel comics
+// Ambil daftar komik
 $comics = [];
-$sql_comics = "SELECT id, judul FROM comics";
+$sql_comics = "SELECT id_comic, title_comic FROM comic";
 $result_comics = $conn->query($sql_comics);
 if ($result_comics) {
     while ($row = $result_comics->fetch_assoc()) {
@@ -13,18 +13,9 @@ if ($result_comics) {
 
 // Proses tambah episode baru dengan multi-image
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $comic_id = $_POST['komik'];
-    $judul_episode = $_POST['judulEpisode'];
-    $nomor_episode = $_POST['nomorEpisode'];
+    $comic_id = intval($_POST['komik']);
+    $chapter_id = intval($_POST['nomorEpisode']);
 
-    // 1. Insert ke episodes
-    $stmt = $conn->prepare("INSERT INTO episodes (comic_id, judul_episode, nomor_episode) VALUES (?, ?, ?)");
-    $stmt->bind_param("isi", $comic_id, $judul_episode, $nomor_episode);
-    $stmt->execute();
-    $episode_id = $conn->insert_id;
-    $stmt->close();
-
-    // 2. Proses semua gambar
     if (isset($_FILES['fileEpisode'])) {
         $files = $_FILES['fileEpisode'];
         $count = count($files['name']);
@@ -35,9 +26,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $imgData = file_get_contents($tmpName);
                 $b64 = base64_encode($imgData);
 
-                // Insert ke episode_images
-                $stmt = $conn->prepare("INSERT INTO episode_images (episode_id, image_b64) VALUES (?, ?)");
-                $stmt->bind_param("is", $episode_id, $b64);
+                $page_number = $i + 1; // urutan halaman
+                // Insert ke tabel image
+                $stmt = $conn->prepare("INSERT INTO image (id_comic, id_chapter, id_page, content) VALUES (?, ?, ?, ?)");
+                $stmt->bind_param("iiis", $comic_id, $chapter_id, $page_number, $b64);
                 $stmt->execute();
                 $stmt->close();
             }
@@ -49,16 +41,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     exit();
 }
 
-// Ambil daftar episode
+// Ambil daftar episode (chapter) per komik (distinct by id_comic & id_chapter)
 $episodes = [];
-$sql = "SELECT e.*, c.judul FROM episodes e JOIN comics c ON e.comic_id = c.id ORDER BY e.id DESC";
+$sql = "SELECT i.id_comic, c.title_comic, i.id_chapter 
+        FROM image i 
+        JOIN comic c ON i.id_comic = c.id_comic 
+        GROUP BY i.id_comic, i.id_chapter 
+        ORDER BY i.id_comic DESC, i.id_chapter DESC";
 $result = $conn->query($sql);
 if ($result) {
     while ($row = $result->fetch_assoc()) {
         $episodes[] = $row;
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -96,36 +91,29 @@ if ($result) {
         <thead>
             <tr>
                 <th>Judul Komik</th>
-                <th>Judul Episode</th>
-                <th>Nomor</th>
-                <th>Aksi</th>
+                <th>Nomor Episode</th>
+                <th>Halaman</th>
             </tr>
         </thead>
         <tbody>
         <?php foreach ($episodes as $episode): ?>
             <tr>
-                <td><?= htmlspecialchars($episode['judul']) ?></td>
-                <td><?= htmlspecialchars($episode['judul_episode']) ?></td>
-                <td><?= htmlspecialchars($episode['nomor_episode']) ?></td>
+                <td><?= htmlspecialchars($episode['title_comic']) ?></td>
+                <td><?= htmlspecialchars($episode['id_chapter']) ?></td>
                 <td>
                     <?php
-                    // Tampilkan semua gambar episode (B64)
-                    $stmtImg = $conn->prepare("SELECT image_b64 FROM episode_images WHERE episode_id = ?");
-                    $stmtImg->bind_param("i", $episode['id']);
+                    // Ambil semua halaman pada episode ini
+                    $stmtImg = $conn->prepare("SELECT id_page, content FROM image WHERE id_comic = ? AND id_chapter = ? ORDER BY id_page ASC");
+                    $stmtImg->bind_param("ii", $episode['id_comic'], $episode['id_chapter']);
                     $stmtImg->execute();
                     $resultImg = $stmtImg->get_result();
                     echo '<div class="episode-images">';
                     while ($imgRow = $resultImg->fetch_assoc()) {
-                        // Ganti image/jpeg ke tipe gambar lain jika ingin support PNG/WebP, dst
-                        echo '<img src="data:image/jpeg;base64,'.$imgRow['image_b64'].'" alt="Episode Image">';
+                        echo '<img src="data:image/jpeg;base64,' . $imgRow['content'] . '" alt="Page ' . $imgRow['id_page'] . '">';
                     }
                     echo '</div>';
                     $stmtImg->close();
                     ?>
-                </td>
-                <td>
-                    <button>Edit</button>
-                    <button>Hapus</button>
                 </td>
             </tr>
         <?php endforeach; ?>
@@ -140,19 +128,14 @@ if ($result) {
             <select id="komik" name="komik" required>
                 <option value="">-- Pilih Komik --</option>
                 <?php foreach ($comics as $komik): ?>
-                    <option value="<?= $komik['id'] ?>"><?= htmlspecialchars($komik['judul']) ?></option>
+                    <option value="<?= $komik['id_comic'] ?>"><?= htmlspecialchars($komik['title_comic']) ?></option>
                 <?php endforeach; ?>
             </select>
         </div>
 
         <div class="form-group">
-            <label for="judulEpisode">Judul Episode:</label>
-            <input type="text" id="judulEpisode" name="judulEpisode" placeholder="Petualangan Baru" required />
-        </div>
-
-        <div class="form-group">
             <label for="nomorEpisode">Nomor Episode:</label>
-            <input type="number" id="nomorEpisode" name="nomorEpisode" placeholder="5" required />
+            <input type="number" id="nomorEpisode" name="nomorEpisode" placeholder="1" required />
         </div>
 
         <div class="form-group">
@@ -164,6 +147,5 @@ if ($result) {
         <button type="submit" class="btn-upload">Upload Episode</button>
     </form>
 </div>
-<script src="js/episode.js"></script>
 </body>
 </html>
