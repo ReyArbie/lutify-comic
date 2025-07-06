@@ -31,14 +31,53 @@ header p {
 }
 
 nav {
+  position: relative;
   background-color: #3d506f;
-  padding: 15px 20px;
-  border-radius: 6px;
-  margin-bottom: 25px;
+  padding: 15px 20px; /* Lebih kecil */
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.nav-center {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 20px; /* Lebih kecil */
   justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.nav-center a {
+  color: #ff5370;
+  text-decoration: none;
+  font-size: 16px; /* Lebih kecil */
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+}
+
+.logout-btn {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: 2px solid #ff5370; /* Border merah */
+  color: #ff5370;
+  font-size: 16px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+  padding: 6px 18px; /* Padding lebih kecil & rapi */
+  border-radius: 5px; /* Agar sudut tombol lebih halus */
+}
+
+.logout-btn:hover {
+  color: #fff;
+  background-color: #ff5370;
+  border-color: #ff5370;
 }
 
 nav a {

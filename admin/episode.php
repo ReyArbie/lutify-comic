@@ -80,11 +80,15 @@ if ($result) {
 </header>
 
 <nav>
+  <div class="nav-center">
     <a href="index.php">Dashboard</a>
     <a href="kelola-comic.php">Kelola Comic</a>
     <a href="episode.php">Kelola Episode</a>
     <a href="upload.php">Upload Comic</a>
+  </div>
+  <a href="logout.php" class="logout-btn">Logout</a>
 </nav>
+
 
 <div class="container">
     <h2>Daftar Episode</h2>

@@ -6,7 +6,7 @@ $modalType = 'success';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $judul = $_POST['judul'] ?? '';
-    $genre = $_POST['genre'] ?? '';
+    $genre = isset($_POST['genre']) ? implode(',', $_POST['genre']) : '';
     $deskripsi = $_POST['deskripsi'] ?? '';
     $cover = $_FILES['cover'];
 
@@ -55,7 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $modalType = 'error';
     }
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -65,50 +64,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Upload Komik - LUTIFY COMIC</title>
     <link rel="stylesheet" href="css/upload.css" />
     <style>
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 9999;
-      left: 0;
-      top: 0;
-      width: 100vw;
-      height: 100vh;
-      overflow: auto;
-      background: rgba(51, 51, 51, 0.85);
-      justify-content: center;
-      align-items: center;
+    #genre-checkboxes-table {
+      border-collapse: separate;
+      border-spacing: 28px 8px;
+      margin-bottom: 5px;
     }
-    .modal.active {
-      display: flex;
+    #genre-checkboxes-table td {
+      vertical-align: middle;
+      padding: 0;
     }
-    .modal-content {
-      background: #202938;
-      color: #f57;
-      margin: auto;
-      padding: 32px 26px 22px 26px;
-      border-radius: 10px;
-      max-width: 350px;
-      width: 90%;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.2);
-      text-align: center;
-      position: relative;
-      animation: pop-in 0.3s;
-    }
-    @keyframes pop-in {
-      0% { transform: scale(0.8); opacity: 0;}
-      100% { transform: scale(1); opacity: 1;}
-    }
-    .modal-content h2 {margin-top: 0;}
-    .modal-content button {
-      background: #f57;
-      color: #fff;
-      padding: 10px 30px;
-      border: none;
-      border-radius: 6px;
-      margin-top: 18px;
-      font-size: 1em;
+    #genre-checkboxes-table label {
       cursor: pointer;
-      font-weight: bold;
+      font-size: 1em;
+      margin-bottom: 0;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    #genre-checkboxes-table input[type="checkbox"] {
+      accent-color: #f57;
+      margin-right: 7px;
+      transform: scale(1.16);
+    }
+    @media (max-width: 700px) {
+      #genre-checkboxes-table { border-spacing: 14px 8px; }
+      #genre-checkboxes-table td { font-size: 0.98em; }
     }
     </style>
   </head>
@@ -118,19 +98,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       <p>Silakan isi formulir di bawah ini untuk menambahkan komik baru</p>
     </header>
 
-    <nav>
-      <a href="index.php">Dashboard</a>
-      <a href="kelola-comic.php">Kelola Comic</a>
-      <a href="episode.php">Kelola Episode</a>
-      <a href="upload.php">Upload Comic</a>
-    </nav>
+<nav>
+  <div class="nav-center">
+    <a href="index.php">Dashboard</a>
+    <a href="kelola-comic.php">Kelola Comic</a>
+    <a href="episode.php">Kelola Episode</a>
+    <a href="upload.php">Upload Comic</a>
+  </div>
+  <a href="logout.php" class="logout-btn">Logout</a>
+</nav>
 
     <form action="" method="post" enctype="multipart/form-data" id="uploadForm" autocomplete="off">
       <label for="judul">Judul Komik:</label><br />
       <input type="text" id="judul" name="judul" /><br /><br />
 
-      <label for="genre">Genre Komik:</label><br />
-      <input type="text" id="genre" name="genre" /><br /><br />
+      <label>Genre Komik:</label>
+    <div class="genre-grid">
+        <label><input type="checkbox" name="genre[]" value="action" /> Action</label>
+        <!-- <label><input type="checkbox" name="genre[]" value="fantasy" /> Fantasy</label> -->
+        <label><input type="checkbox" name="genre[]" value="adventure" /> Adventure</label>
+        <label><input type="checkbox" name="genre[]" value="romance" /> Romance</label>
+
+        <label><input type="checkbox" name="genre[]" value="comedy" /> Comedy</label>
+        <label><input type="checkbox" name="genre[]" value="sci-fi" /> horror</label>
+        <!-- <label><input type="checkbox" name="genre[]" value="drama" /> Drama</label> -->
+        <!-- <label><input type="checkbox" name="genre[]" value="supernatural" /> Supernatural</label> -->
+
+        <!-- <label><input type="checkbox" name="genre[]" value="thriller" /> Thriller</label> -->
+    </div>
+    <small>Pilih satu atau lebih genre yang sesuai.</small><br /><br />
+
+
 
       <label for="deskripsi">Deskripsi:</label><br />
       <textarea id="deskripsi" name="deskripsi" rows="4"></textarea><br /><br />
@@ -150,7 +148,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       </div>
     </div>
 
-    <script src="js/upload.js"></script>
     <script>
     // Modal handler (untuk PHP)
     document.addEventListener('DOMContentLoaded', function() {
@@ -164,10 +161,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             window.location = "kelola-comic.php";
           <?php } ?>
         };
-        // Blok scroll di belakang modal
         document.body.style.overflow = 'hidden';
+      }
+      // Checkbox Select All logic
+      var selectAll = document.getElementById('selectAllGenre');
+      if (selectAll) {
+        selectAll.addEventListener('change', function() {
+          var checked = this.checked;
+          document.querySelectorAll('#genre-checkboxes-table input[type=checkbox][name="genre[]"]').forEach(function(box) {
+            box.checked = checked;
+          });
+        });
       }
     });
     </script>
+    <script src="js/upload.js"></script>
   </body>
 </html>
