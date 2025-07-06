@@ -122,8 +122,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   </head>
   <body>
     <header>
-      <h1>Upload Komik Baru</h1>
-      <p>Silakan isi formulir di bawah ini untuk menambahkan komik baru</p>
+      <h1>Upload Comic Baru</h1>
+      <p>Silakan isi form di bawah ini untuk menambahkan Comic baru</p>
     </header>
 
 <nav>
@@ -137,10 +137,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </nav>
 
     <form action="" method="post" enctype="multipart/form-data" id="uploadForm" autocomplete="off">
-      <label for="judul">Judul Komik:</label><br />
+      <label for="judul">Judul comic:</label><br />
       <input type="text" id="judul" name="judul" /><br /><br />
 
-      <label>Genre Komik:</label>
+      <label>Genre comic:</label>
     <div class="genre-grid">
         <label><input type="checkbox" name="genre[]" value="action" /> Action</label>
         <!-- <label><input type="checkbox" name="genre[]" value="fantasy" /> Fantasy</label> -->
