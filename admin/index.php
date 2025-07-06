@@ -28,7 +28,7 @@ if ($result_chapter && $row_chapter = $result_chapter->fetch_assoc()) {
   <body>
     <header>
       <h1>Dashboard Admin</h1>
-      <p>Selamat datang di lutify comic</p>
+      <p>Selamat datang di LUTIFY COMIC</p>
     </header>
 <nav>
   <div class="nav-center">
