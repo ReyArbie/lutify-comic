@@ -35,7 +35,7 @@
 
     <section class="cards" id="cards-container">
       <?php
-        $sql = "SELECT * FROM anime";
+        $sql = "SELECT * FROM comic";
         $result = $conn->query($sql);
 
         if ($result && $result->num_rows > 0) {
