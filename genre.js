@@ -1,1 +1,0 @@
-// Fungsi filter genre

@@ -1,0 +1,60 @@
+.header {
+  display: flex;
+  align-items: center;
+  background-color: #202938;
+  padding: 10px;
+}
+.header h1 {
+  font-size: 2.2em;
+  color: #f5716e;
+  margin: 0;
+  font-weight: bold;
+  letter-spacing: 2px;
+  /* Agar judul dan logo tidak mepet */
+}
+.logo-header {
+  width: 120px; /* Ukuran logo kecil dan rapi */
+  height: auto;
+  margin-left: 18px; /* Jarak antara judul dan logo */
+  margin-right: 0;
+  display: block;
+}
+.header form {
+  margin-left: auto; /* Search form tetap di kanan */
+}
+nav {
+  background-color: #3d506f;
+  padding: 10px;
+  color: #f5716e;
+}
+nav a {
+  color: #f5716e;
+  text-decoration: none;
+  margin-right: 10px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+nav a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .header h1 {
+    font-size: 1.3em;
+  }
+  .logo-header {
+    margin-left: 0;
+    margin-top: 6px;
+    width: 30px;
+  }
+  .header form {
+    margin-left: 0;
+    width: 100%;
+    margin-top: 10px;
+  }
+}

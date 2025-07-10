@@ -10,7 +10,8 @@ if ($result && $row = $result->fetch_assoc()) {
 
 // Hitung total chapter unik dari tabel image
 $total_chapter = 0;
-$result_chapter = $conn->query("SELECT COUNT(DISTINCT id_chapter) as total FROM image");
+$result_chapter = $conn->query("SELECT COUNT(DISTINCT CONCAT(id_comic, '-', id_chapter)) as total FROM image");
+
 if ($result_chapter && $row_chapter = $result_chapter->fetch_assoc()) {
   $total_chapter = $row_chapter['total'];
 }
@@ -32,7 +33,7 @@ if ($result_chapter && $row_chapter = $result_chapter->fetch_assoc()) {
     </header>
 <nav>
   <div class="nav-center">
-    <a href="index.php">Dashboard</a>
+    <a href="/admin/id">Dashboard</a>
     <a href="kelola-comic.php">Kelola Comic</a>
     <a href="chapter.php">Kelola Chapter</a>
     <a href="upload.php">Upload Comic</a>
