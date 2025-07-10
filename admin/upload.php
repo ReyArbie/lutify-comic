@@ -6,12 +6,29 @@ $modalType = 'success';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $judul = $_POST['judul'] ?? '';
-    $genre = $_POST['genre'] ?? '';
     $deskripsi = $_POST['deskripsi'] ?? '';
     $cover = $_FILES['cover'];
 
-    if ($judul && $genre && $deskripsi && $cover['name']) {
-        $cek = $conn->prepare("SELECT COUNT(*) FROM comics WHERE judul = ?");
+    // Daftar genre yang ada pada tabel genre
+    $all_genres = ['action', 'comedy', 'romance', 'horror', 'adventure'];
+    $genre_values = array_fill_keys($all_genres, 0);
+
+    // Isi 1 jika user centang
+    if (isset($_POST['genre'])) {
+        foreach ($_POST['genre'] as $g) {
+            if (isset($genre_values[$g])) {
+                $genre_values[$g] = 1;
+            }
+        }
+    }
+
+    if ($judul && $deskripsi && $cover['tmp_name']) {
+        // Baca file gambar dan encode ke base64
+        $imageData = file_get_contents($cover['tmp_name']);
+        $base64Cover = base64_encode($imageData);
+
+        // Cek apakah judul sudah ada di tabel comic
+        $cek = $conn->prepare("SELECT COUNT(*) FROM comic WHERE title_comic = ?");
         $cek->bind_param("s", $judul);
         $cek->execute();
         $cek->bind_result($ada);
@@ -23,31 +40,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $modalMessage = 'Judul komik sudah ada, silakan pakai judul lain!';
             $modalType = 'error';
         } else {
-            $uploadDir = "uploads/";
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
-            }
-            $coverName = time() . '_' . basename($cover['name']);
-            $uploadFile = $uploadDir . $coverName;
+            // 1. Insert data komik ke tabel comic
+            $stmt = $conn->prepare("INSERT INTO comic (title_comic, summary_comic, cover_comic) VALUES (?, ?, ?)");
+            $stmt->bind_param("sss", $judul, $deskripsi, $base64Cover);
 
-            if (move_uploaded_file($cover['tmp_name'], $uploadFile)) {
-                $stmt = $conn->prepare("INSERT INTO comics (judul, genre, deskripsi, cover) VALUES (?, ?, ?, ?)");
-                $stmt->bind_param("ssss", $judul, $genre, $deskripsi, $coverName);
+            if ($stmt->execute()) {
+                // 2. Ambil id_comic terakhir
+                $last_id = $conn->insert_id;
 
-                if ($stmt->execute()) {
+                // 3. Insert genre ke tabel genre
+                $query = "INSERT INTO genre (id_comic, action, comedy, romance, horror, adventure) VALUES (?, ?, ?, ?, ?, ?)";
+                $stmt2 = $conn->prepare($query);
+                $stmt2->bind_param(
+                    "iiiiii", $last_id,
+                    $genre_values['action'],
+                    $genre_values['comedy'],
+                    $genre_values['romance'],
+                    $genre_values['horror'],
+                    $genre_values['adventure']
+                );
+                if ($stmt2->execute()) {
                     $showModal = true;
                     $modalMessage = 'Komik berhasil di-upload!';
                     $modalType = 'success';
                 } else {
                     $showModal = true;
-                    $modalMessage = 'Gagal upload ke database!';
+                    $modalMessage = 'Gagal simpan genre!';
                     $modalType = 'error';
                 }
+                $stmt2->close();
             } else {
                 $showModal = true;
-                $modalMessage = 'Upload cover gagal!';
+                $modalMessage = 'Gagal upload ke database!';
                 $modalType = 'error';
             }
+            $stmt->close();
         }
     } else {
         $showModal = true;
@@ -55,8 +82,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $modalType = 'error';
     }
 }
-
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
   <head>
@@ -65,72 +92,71 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Upload Komik - LUTIFY COMIC</title>
     <link rel="stylesheet" href="css/upload.css" />
     <style>
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 9999;
-      left: 0;
-      top: 0;
-      width: 100vw;
-      height: 100vh;
-      overflow: auto;
-      background: rgba(51, 51, 51, 0.85);
-      justify-content: center;
-      align-items: center;
+    #genre-checkboxes-table {
+      border-collapse: separate;
+      border-spacing: 28px 8px;
+      margin-bottom: 5px;
     }
-    .modal.active {
-      display: flex;
+    #genre-checkboxes-table td {
+      vertical-align: middle;
+      padding: 0;
     }
-    .modal-content {
-      background: #202938;
-      color: #f57;
-      margin: auto;
-      padding: 32px 26px 22px 26px;
-      border-radius: 10px;
-      max-width: 350px;
-      width: 90%;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.2);
-      text-align: center;
-      position: relative;
-      animation: pop-in 0.3s;
-    }
-    @keyframes pop-in {
-      0% { transform: scale(0.8); opacity: 0;}
-      100% { transform: scale(1); opacity: 1;}
-    }
-    .modal-content h2 {margin-top: 0;}
-    .modal-content button {
-      background: #f57;
-      color: #fff;
-      padding: 10px 30px;
-      border: none;
-      border-radius: 6px;
-      margin-top: 18px;
-      font-size: 1em;
+    #genre-checkboxes-table label {
       cursor: pointer;
-      font-weight: bold;
+      font-size: 1em;
+      margin-bottom: 0;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    #genre-checkboxes-table input[type="checkbox"] {
+      accent-color: #f57;
+      margin-right: 7px;
+      transform: scale(1.16);
+    }
+    @media (max-width: 700px) {
+      #genre-checkboxes-table { border-spacing: 14px 8px; }
+      #genre-checkboxes-table td { font-size: 0.98em; }
     }
     </style>
   </head>
   <body>
     <header>
-      <h1>Upload Komik Baru</h1>
-      <p>Silakan isi formulir di bawah ini untuk menambahkan komik baru</p>
+      <h1>Upload Comic Baru</h1>
+      <p>Silakan isi form di bawah ini untuk menambahkan Comic baru</p>
     </header>
 
-    <nav>
-      <a href="index.php">Dashboard</a>
-      <a href="kelola-comic.php">Kelola Comic</a>
-      <a href="episode.php">Kelola Episode</a>
-      <a href="upload.php">Upload Comic</a>
-    </nav>
+<nav>
+  <div class="nav-center">
+    <a href="index.php">Dashboard</a>
+    <a href="kelola-comic.php">Kelola Comic</a>
+    <a href="chapter.php">Kelola Chapter</a>
+    <a href="upload.php">Upload Comic</a>
+  </div>
+  <a href="logout.php" class="logout-btn">Logout</a>
+</nav>
 
     <form action="" method="post" enctype="multipart/form-data" id="uploadForm" autocomplete="off">
-      <label for="judul">Judul Komik:</label><br />
+      <label for="judul">Judul comic:</label><br />
       <input type="text" id="judul" name="judul" /><br /><br />
 
-      <label for="genre">Genre Komik:</label><br />
-      <input type="text" id="genre" name="genre" /><br /><br />
+      <label>Genre comic:</label>
+    <div class="genre-grid">
+        <label><input type="checkbox" name="genre[]" value="action" /> Action</label>
+        <!-- <label><input type="checkbox" name="genre[]" value="fantasy" /> Fantasy</label> -->
+        <label><input type="checkbox" name="genre[]" value="adventure" /> Adventure</label>
+        <label><input type="checkbox" name="genre[]" value="romance" /> Romance</label>
+
+        <label><input type="checkbox" name="genre[]" value="comedy" /> Comedy</label>
+        <label><input type="checkbox" name="genre[]" value="sci-fi" /> horror</label>
+        <!-- <label><input type="checkbox" name="genre[]" value="drama" /> Drama</label> -->
+        <!-- <label><input type="checkbox" name="genre[]" value="supernatural" /> Supernatural</label> -->
+
+        <!-- <label><input type="checkbox" name="genre[]" value="thriller" /> Thriller</label> -->
+    </div>
+    <small>Pilih satu atau lebih genre yang sesuai.</small><br /><br />
+
+
 
       <label for="deskripsi">Deskripsi:</label><br />
       <textarea id="deskripsi" name="deskripsi" rows="4"></textarea><br /><br />
@@ -150,7 +176,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       </div>
     </div>
 
-    <script src="js/upload.js"></script>
     <script>
     // Modal handler (untuk PHP)
     document.addEventListener('DOMContentLoaded', function() {
@@ -164,10 +189,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             window.location = "kelola-comic.php";
           <?php } ?>
         };
-        // Blok scroll di belakang modal
         document.body.style.overflow = 'hidden';
+      }
+      // Checkbox Select All logic
+      var selectAll = document.getElementById('selectAllGenre');
+      if (selectAll) {
+        selectAll.addEventListener('change', function() {
+          var checked = this.checked;
+          document.querySelectorAll('#genre-checkboxes-table input[type=checkbox][name="genre[]"]').forEach(function(box) {
+            box.checked = checked;
+          });
+        });
       }
     });
     </script>
+    <script src="js/upload.js"></script>
   </body>
 </html>
