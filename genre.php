@@ -8,8 +8,13 @@
     <link rel="stylesheet" href="Styles/header.css"/>
 </head>
 <body>
-<?php
-    include 'koneksi.php';
+<?php include 'koneksi.php'; ?>
+
+</head>
+<body>
+    <?php
+        include 'koneksi.php';
+
 
     // Query ambil data comic + genre
     $sql = "SELECT comic.id_comic, comic.title_comic, comic.cover_comic, 
@@ -29,6 +34,7 @@
         return implode(', ', $genres);
     }
 ?>
+
     <?php include 'header.php' ?>
     
     <div class="grid-content">
@@ -36,6 +42,16 @@
         <hr>
         <div class="genre-filter">
             <button class="genre-btn active" data-genre="all">All</button>
+
+
+    
+    <div class="grid-content">
+    <h2>
+        Genre
+    </h2>
+    <hr>
+    <div class="genre-filter">
+        <button class="genre-btn active" data-genre="all">All</button>
             <button class="genre-btn" data-genre="comedy">Comedy</button>
             <button class="genre-btn" data-genre="action">Action</button>
             <button class="genre-btn" data-genre="romance">Romance</button>
@@ -44,6 +60,8 @@
         </div>
 
         <div class="comic-list">
+
+    <div class="comic-list">
         <?php 
         if ($result && $result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
@@ -70,7 +88,11 @@
         </div>
     </div>
 
+
     <script src="js/genre.js"></script>
     <?php include 'footer.php'; ?>
 </body>
 </html>
+=======
+</html> 
+
