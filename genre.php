@@ -1,31 +1,45 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lutify Comic</title>
+    <link rel="stylesheet" href="Styles/genre.css"/>
+</head>
+<body>
     <?php
         include 'koneksi.php';
-    ?>
 
-<head>
-    <title>
-        Lutify Comic
-    </title>
-</head>
+    // Query ambil data comic + genre
+    $sql = "SELECT comic.id_comic, comic.title_comic, comic.cover_comic, 
+                   genre.action, genre.comedy, genre.romance, genre.horror, genre.adventure
+            FROM comic
+            LEFT JOIN genre ON comic.id_comic = genre.id_comic
+            ORDER BY comic.title_comic ASC";
+    $result = $conn->query($sql);
 
-<link rel="stylesheet" href="Styles/genre.css"/>
-
-<body>
+    function getGenreList($row) {
+        $genres = [];
+        if ($row['action']) $genres[] = 'Action';
+        if ($row['comedy']) $genres[] = 'Comedy';
+        if ($row['romance']) $genres[] = 'Romance';
+        if ($row['horror']) $genres[] = 'Horror';
+        if ($row['adventure']) $genres[] = 'Adventure';
+        return implode(', ', $genres);
+    }
+?>
     <header>
-    <div class="header">
-        <h1>
-            LUTIFY COMIC
-        </h1>
-        
-    </div>
+        <div class="header">
+            <h1>LUTIFY COMIC</h1>
+            <form onsubmit="event.preventDefault();">
+                <input placeholder="Cari Komik..." type="search" id="searchComic" />
+                <button type="submit">CARI</button>
+            </form>
+        </div>
         <nav>
-            <a href="#">HOME</a>
-            <a href="#">List A-Z</a>
-            <a href="#">Genre</a>
+            <a href="index.php">HOME</a>
+            <a href="lista-z.php">List A-Z</a>
+            <a href="genre.php">Genre</a>
         </nav>
-        
     </header>
     
     <div class="grid-content">
@@ -34,61 +48,41 @@
     </h2>
     <hr>
     <div class="genre-filter">
-        <button class="genre-btn" data-genre="All">All</button>
-        <button class="genre-btn" data-genre="Comedy">Comedy</button>
-        <button class="genre-btn" data-genre="Action">Action</button>
-        <button class="genre-btn" data-genre="Romance">Romance</button>
-        <button class="genre-btn" data-genre="Fantasy">Fantasy</button>
-        <button class="genre-btn" data-genre="Drama">Drama</button>
-    </div>
-    
-    <!-- <table>
-        <tbody id="comics-container"></tbody>
-    </table> -->
-
-    <?php 
-        $sql = "SELECT * FROM comic";
-        $result = $conn->query($sql);
-            echo "<table>
-            <tr>";
-
-        $baris = 0; 
-        
-        while ($row = $result->fetch_assoc()){
-            if($baris == 3){
-                echo "</tr><tr>";
-                $baris = 0;
+        <button class="genre-btn active" data-genre="all">All</button>
+            <button class="genre-btn" data-genre="comedy">Comedy</button>
+            <button class="genre-btn" data-genre="action">Action</button>
+            <button class="genre-btn" data-genre="romance">Romance</button>
+            <button class="genre-btn" data-genre="horror">Horror</button>
+            <button class="genre-btn" data-genre="adventure">Adventure</button>
+        </div>
+    <div class="comic-list">
+        <?php 
+        if ($result && $result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $genre_list = getGenreList($row);
+                $data_genre = strtolower(str_replace(', ', ',', $genre_list));
+                // Detect MIME type (kalau ada kemungkinan bukan JPEG)
+                $imgdata = $row['cover_comic'];
+                $mime = (strpos($imgdata, '/9j/') === 0) ? 'jpeg' : 'png';
+                $img_src = "data:image/$mime;base64," . $imgdata;
+                // Pakai title_comic dan urlencode untuk link
+                $title_url = urlencode($row['title_comic']);
+                echo "
+                <a href='detail-comic.php?title_comic=$title_url' class='comic-card' data-genre='$data_genre' style='text-decoration:none;'>
+                    <img src='$img_src' alt='" . htmlspecialchars($row['title_comic']) . "'>
+                    <h3>" . htmlspecialchars($row['title_comic']) . "</h3>
+                    <small>$genre_list</small>
+                </a>
+                ";
             }
-            echo "
-            <td><img src= images/".$row['cover']." width = '100' height = '140'>
-            <h3>".$row['judul']."</h3>
-            <small>".$row['genre']."</small></td>
-            ";
-            $baris++;
+        } else {
+            echo "<div>Tidak ada komik ditemukan.</div>";
         }
-            echo "</tr>
-            </table>";
-    ?>
-
-    <div class="page">    
-        <button>
-            1
-        </button>
-        <button>
-            2
-        </button>
-        <button>
-            3
-        </button>
-        <button>
-            5
-        </button>
-        <button>
-            Next &gt;&gt;
-        </button>
+        ?>
+        </div>
     </div>
 </div>
 <script src = "genre.js" defer></script>
 </body>
 
-</html>
+</html> 
