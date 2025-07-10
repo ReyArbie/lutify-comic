@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Lutify Comic</title>
     <link rel="stylesheet" href="Styles/genre.css"/>
+    <link rel="stylesheet" href="Styles/header.css"/>
     <link rel="stylesheet" href="Styles/footer.css"/>
 </head>
 <body>
@@ -28,20 +29,7 @@
         return implode(', ', $genres);
     }
 ?>
-    <header>
-        <div class="header">
-            <h1>LUTIFY COMIC</h1>
-            <form onsubmit="event.preventDefault();">
-                <input placeholder="Cari Komik..." type="search" id="searchComic" />
-                <button type="submit">CARI</button>
-            </form>
-        </div>
-        <nav>
-            <a href="#">HOME</a>
-            <a href="lista-z.php">List A-Z</a>
-            <a href="genre.php">Genre</a>
-        </nav>
-    </header>
+    <?php include 'header.php'; ?>
     
     <div class="grid-content">
         <h2>Genre</h2>
