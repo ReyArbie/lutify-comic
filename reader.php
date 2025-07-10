@@ -652,5 +652,4 @@ function prevPage($comicId, $chapter, $page) {
         });
     </script>
 </body>
->>>>>>> a39882d2f1a2613517f8186890aa9283448e88db
 </html>
