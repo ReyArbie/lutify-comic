@@ -5,16 +5,10 @@
     <title>Lutify Comic</title>
     <link rel="stylesheet" href="Styles/genre.css"/>
     <link rel="stylesheet" href="Styles/footer.css"/>
-    <link rel="stylesheet" href="Styles/header.css"/>
 </head>
 <body>
-<?php include 'koneksi.php'; ?>
-
-</head>
-<body>
-    <?php
-        include 'koneksi.php';
-
+<?php
+    include 'koneksi.php';
 
     // Query ambil data comic + genre
     $sql = "SELECT comic.id_comic, comic.title_comic, comic.cover_comic, 
@@ -34,24 +28,26 @@
         return implode(', ', $genres);
     }
 ?>
-
-    <?php include 'header.php' ?>
+    <header>
+        <div class="header">
+            <h1>LUTIFY COMIC</h1>
+            <form onsubmit="event.preventDefault();">
+                <input placeholder="Cari Komik..." type="search" id="searchComic" />
+                <button type="submit">CARI</button>
+            </form>
+        </div>
+        <nav>
+            <a href="#">HOME</a>
+            <a href="lista-z.php">List A-Z</a>
+            <a href="genre.php">Genre</a>
+        </nav>
+    </header>
     
     <div class="grid-content">
         <h2>Genre</h2>
         <hr>
         <div class="genre-filter">
             <button class="genre-btn active" data-genre="all">All</button>
-
-
-    
-    <div class="grid-content">
-    <h2>
-        Genre
-    </h2>
-    <hr>
-    <div class="genre-filter">
-        <button class="genre-btn active" data-genre="all">All</button>
             <button class="genre-btn" data-genre="comedy">Comedy</button>
             <button class="genre-btn" data-genre="action">Action</button>
             <button class="genre-btn" data-genre="romance">Romance</button>
@@ -60,8 +56,6 @@
         </div>
 
         <div class="comic-list">
-
-    <div class="comic-list">
         <?php 
         if ($result && $result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
@@ -88,11 +82,30 @@
         </div>
     </div>
 
-
-    <script src="js/genre.js"></script>
-    <?php include 'footer.php'; ?>
+    <script src="js/genre.js">
+    document.addEventListener('DOMContentLoaded', function() {
+        const buttons = document.querySelectorAll('.genre-btn');
+        buttons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                buttons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const genre = this.getAttribute('data-genre').toLowerCase();
+                document.querySelectorAll('.comic-card').forEach(card => {
+                    let cardGenres = card.getAttribute('data-genre').split(',');
+                    if (genre === "all") {
+                        card.style.display = "";
+                    } else {
+                        if (cardGenres.includes(genre)) {
+                            card.style.display = "";
+                        } else {
+                            card.style.display = "none";
+                        }
+                    }
+                });
+            });
+        });
+    });
+    </script>
+    <?php include 'footer.php'?>
 </body>
 </html>
-=======
-</html> 
-
