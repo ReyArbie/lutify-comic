@@ -1,4 +1,4 @@
-/* Footer */
+/* ===== FOOTER ===== */
 .site-footer {
   background-color: #202938;
   color: #f0f0f0;
@@ -58,7 +58,15 @@
   font-size: 0.85em;
 }
 
-/* Responsive Footer */
+/* ===== LOGO FOOTER ===== */
+.logo-footer {
+  width: 130px;
+  height: auto;
+  margin-top: 14px;
+  display: block;
+}
+
+/* ===== RESPONSIVE FOOTER ===== */
 @media (max-width: 600px) {
   .footer-container {
     flex-direction: column;
@@ -72,5 +80,10 @@
 
   .footer-bottom {
     font-size: 0.8em;
+  }
+
+  .logo-footer {
+    width: 40px;
+    margin-top: 10px;
   }
 }

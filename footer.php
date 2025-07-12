@@ -20,6 +20,8 @@
             <h4>Contact</h4>
             <p>Email: <a href="mailto:me@comiclutify.site">me@comiclutify.site</a></p>
             <p>Website: <a href="https://comiclutify.site" target="_blank">comiclutify.site</a></p>
+            <!-- Tambahkan logo di sini -->
+            <img src="Images/logo-esgul.jpeg" alt="Logo Esa Unggul" class="logo-footer">
         </div>
     </div>
     <div class="footer-bottom">

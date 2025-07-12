@@ -2,7 +2,7 @@
 <header>
     <div class="header">
         <h1>LUTIFY COMIC</h1>
-        <img src="Images/logo-esgul.jpeg" alt="Logo Esa Unggul" class="logo-header">
+        <!-- Logo dihapus dari header -->
         <form onsubmit="event.preventDefault();">
             <input placeholder="Cari Komik..." type="search" id="searchComic" />
             <button type="submit">CARI</button>
