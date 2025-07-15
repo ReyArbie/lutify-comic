@@ -67,6 +67,7 @@ if ($chapter_result) {
     <title><?= htmlspecialchars($row['title_comic']) ?></title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" href="Styles/detail-comic.css" />
+    <link rel="stylesheet" href="Styles/footer.css" />
 </head>
 <body>
     <header>
@@ -124,8 +125,9 @@ if ($chapter_result) {
       <?php endif; ?>
 
     </main>
-    <footer>
+    <!-- <footer>
       <p>© 2025 Website Comic/Manga. Dibuat oleh Rakha Adhitya.</p>
-    </footer>
+    </footer> -->
+    <?php include 'footer.php' ?>
 </body>
 </html>
