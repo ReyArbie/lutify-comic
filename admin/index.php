@@ -25,6 +25,7 @@ if ($result_chapter && $row_chapter = $result_chapter->fetch_assoc()) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard LUTIFY COMIC</title>
     <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/footer.css" />
   </head>
   <body>
     <header>
@@ -33,7 +34,7 @@ if ($result_chapter && $row_chapter = $result_chapter->fetch_assoc()) {
     </header>
 <nav>
   <div class="nav-center">
-    <a href="/admin/id">Dashboard</a>
+    <a href="index.php">Dashboard</a>
     <a href="kelola-comic.php">Kelola Comic</a>
     <a href="chapter.php">Kelola Chapter</a>
     <a href="upload.php">Upload Comic</a>

@@ -1,6 +1,6 @@
 <?php
 // Database connection
-$db = new PDO('mysql:host=localhost;dbname=lutify;charset=utf8', 'root', '');
+$db = new PDO('mysql:host=localhost;dbname=lutify_comic;charset=utf8', 'root', '');
 
 // Get current comic, chapter, and page from URL or defaults
 $comicId = isset($_GET['comic']) ? (int)$_GET['comic'] : 1;

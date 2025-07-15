@@ -1,9 +1,11 @@
+/* CSS untuk header */
 .header {
   display: flex;
   align-items: center;
   background-color: #202938;
   padding: 10px;
 }
+
 .header h1 {
   font-size: 2.2em;
   color: #f5716e;
@@ -12,6 +14,17 @@
   letter-spacing: 2px;
   /* Agar judul dan logo tidak mepet */
 }
+
+.header h1 a {
+  color: #f5716e; /* Warna teks seperti judul */
+  text-decoration: none; /* Menghilangkan garis bawah default */
+  cursor: pointer; /* Mengubah kursor menjadi tangan */
+}
+
+.header h1 a:hover {
+  text-decoration: underline; /* Menambahkan garis bawah saat hover */
+}
+
 .logo-header {
   width: 120px; /* Ukuran logo kecil dan rapi */
   height: auto;
@@ -19,14 +32,17 @@
   margin-right: 0;
   display: block;
 }
+
 .header form {
   margin-left: auto; /* Search form tetap di kanan */
 }
+
 nav {
   background-color: #3d506f;
   padding: 10px;
   color: #f5716e;
 }
+
 nav a {
   color: #f5716e;
   text-decoration: none;
@@ -34,24 +50,28 @@ nav a {
   font-weight: 500;
   letter-spacing: 0.5px;
 }
+
 nav a:hover {
   text-decoration: underline;
 }
 
-/* Responsive */
+/* Responsif */
 @media (max-width: 600px) {
   .header {
     flex-direction: column;
     align-items: flex-start;
   }
+
   .header h1 {
     font-size: 1.3em;
   }
+
   .logo-header {
     margin-left: 0;
     margin-top: 6px;
     width: 30px;
   }
+
   .header form {
     margin-left: 0;
     width: 100%;
