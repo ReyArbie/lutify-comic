@@ -4,7 +4,7 @@
 
     $user_db = "root";
     $pass_db = "";
-    $db_name = "lutify";
+    $db_name = "lutify_comic_1";
 
     $conn = new mysqli($hostname, $user_db, $pass_db);
 
